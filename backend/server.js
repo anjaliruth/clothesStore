@@ -17,3 +17,31 @@ client.connect(function(err) {
     console.log("Connected to PostgreSQL");
   }
 });
+
+
+//get all items
+app.get("/items", async (req, res) => {
+    try {
+      client.query("SELECT * FROM store", (err, result) => {
+        if (err) {
+          console.error("error running query", err);
+          res.status(500).send("Server Error");
+        } else {
+          const rows = result.rows
+          console.log("Retrieved data from database:", rows);
+      
+          res.json(result.rows)
+        }
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  });
+  
+  app.use(express.json());
+  
+  app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
+  
